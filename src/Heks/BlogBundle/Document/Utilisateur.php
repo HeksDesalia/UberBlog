@@ -26,10 +26,8 @@ class Utilisateur
      */
     protected $password;
 
-    /**
-    * @MongoDB\Collection
-    */
-    protected $articles;
+    /** @MongoDB\EmbedMany(targetDocument="Article") */
+    private $articles = array();
 
     /**
      * Get id

@@ -1,9 +1,0 @@
-<h1> Liste des articles </h1>
-
-<ul>
-    {% for key, utilisateur in utilisateurs %}
-        {% for key, article in utilisateur .articles %}
-          <li>{{ article }} écrit par {{utilisateur.nom}}</li>
-        {% endfor %}
-    {% endfor %}
-</ul>

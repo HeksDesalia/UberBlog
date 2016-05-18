@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}ÜberBlog - Nouvel article{% endblock %}
+{% block body %}
+<section id="header">
+  <header>
+    <h1>ÜberBlog - Création d'un article</h1>
+    <form action="{{ path('article_create') }}" method="post">
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit" class="button style2 scrolly">Créer</button>
+        </p>
+    </form>
+  </header>
+</section>
+
+{% endblock %}

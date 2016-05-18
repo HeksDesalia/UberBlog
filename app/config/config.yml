@@ -74,7 +74,7 @@ doctrine_mongodb:
         default:
             server: mongodb://localhost:27017
             options: {}
-    default_database: symfo-social
+    default_database: UberBlog
     document_managers:
         default:
             auto_mapping: true

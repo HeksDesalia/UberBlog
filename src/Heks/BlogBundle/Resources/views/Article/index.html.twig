@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}ÜberBlog{% endblock %}
+
+{% block body %}
+<!-- Banner -->
+  <section id="banner">
+    <header>
+      <h2>ÜberBlog</h2>
+    </header>
+  </section>
+
+  {% for d in documents %}
+    {% for document in d %}
+      <article id="first" class="container box style1 right">
+        <a href="#" class="image fit"><img src="{{asset('images/pic01.jpg')}}" alt="" /></a>
+        <div class="inner">
+          <header>
+            <h2>{{ document.titre }}</h2>
+            <p> Publié le {{ document.date|date("d/m/Y") }} </p>
+          </header>
+          <p>
+            {{ document.contenu }}
+          </p>
+        </div>
+      </article>
+    {% endfor %}
+  {% endfor %}
+ {% endblock %}

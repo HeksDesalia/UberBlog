@@ -13,6 +13,11 @@
         <header>
           <h1>ÜberBlog</h1>
           <p>Le blog colaboratif </p>
+          {% if utilisateur is defined %}
+            <p>Connecté en tant que : {{utilisateur.nom}}</p>
+          {% else %}
+            <a href="{{ path('utilisateur_connect') }}">Se connecter</a>
+          {% endif %}
         </header>
         <footer>
           <a href="{{ path('utilisateur') }}" class="button style2 scrolly-middle">Accueil</a>

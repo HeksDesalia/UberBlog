@@ -7,23 +7,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Session;
-use Symfony\Component\HttpFoundation\Response;
-use Heks\BlogBundle\Document\Utilisateur;
-use Heks\BlogBundle\Form\UtilisateurType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Heks\BlogBundle\Document\Article;
+use Heks\BlogBundle\Form\ArticleType;
 
 /**
- * Utilisateur controller.
+ * Article controller.
  *
- * @Route("/utilisateur")
+ * @Route("/article")
  */
-class UtilisateurController extends Controller
+class ArticleController extends Controller
 {
     /**
-     * Lists all Utilisateur documents.
+     * Lists all Article documents.
      *
-     * @Route("/", name="utilisateur")
+     * @Route("/", name="article")
      * @Template()
      *
      * @return array
@@ -33,63 +30,26 @@ class UtilisateurController extends Controller
         $dm = $this->getDocumentManager();
 
         $documents = $dm->getRepository('HeksBlogBundle:Utilisateur')->findAll();
-        $utilisateur = $this->get('session')->get('utilisateur');
-        return array('documents' => $documents,
-                     'utilisateur' => $utilisateur);
-    }
-
-
-    /**
-     * Allow user to connect.
-     *
-     * @Route("/connect", name="utilisateur_connect")
-     * @Template()
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function connectAction(Request $request){
-      $document = new Utilisateur();
-      $form     = $this->createForm(UtilisateurType::class, $document);
-      $form->handleRequest($request);
-
-      if ($form->isSubmitted()) {
-        $utilisateur = $this->get('doctrine_mongodb')
-        ->getRepository('HeksBlogBundle:Utilisateur')
-        ->findOneByNom($document->getNom());
-
-        if ($utilisateur != null){
-          $session = $this->get('session');
-          $session->set('utilisateur', $utilisateur);
-          return $this->redirect($this->generateUrl('utilisateur'));
+        //var_dump($documents);
+        foreach ($documents as $document) {
+          $articles[] = $document->getArticles()->toArray();
         }
-      }
 
-      return array(
-          'document' => $document,
-          'form'     => $form->createView()
-      );
+        return array('documents' => $articles);
     }
 
     /**
-     * Displays a form to create a new Utilisateur document.
+     * Displays a form to create a new Article document.
      *
-     * @Route("/new", name="utilisateur_new")
+     * @Route("/new", name="article_new")
      * @Template()
      *
      * @return array
      */
     public function newAction()
     {
-        $document = new Utilisateur();
-        $form = $this->createForm(UtilisateurType::class, $document);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-        // ... perform some action, such as saving the task to the database
-
-        return $this->redirectToRoute('utilisateur_create');
-        }
+        $document = new Article();
+        $form = $this->createForm(ArticleType::class, $document);
 
         return array(
             'document' => $document,
@@ -98,11 +58,11 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * Creates a new Utilisateur document.
+     * Creates a new Article document.
      *
-     * @Route("/create", name="utilisateur_create")
-     *
-     * @Template("HeksBlogBundle:Utilisateur:new.html.twig")
+     * @Route("/create", name="article_create")
+     * @Method("POST")
+     * @Template("HeksBlogBundle:Article:new.html.twig")
      *
      * @param Request $request
      *
@@ -110,15 +70,20 @@ class UtilisateurController extends Controller
      */
     public function createAction(Request $request)
     {
-        $document = new Utilisateur();
-        $form     = $this->createForm(UtilisateurType::class, $document);
+        $document = new Article();
+        $form     = $this->createForm(ArticleType::class, $document);
         $form->handleRequest($request);
+
         if ($form->isValid()) {
+          $utilisateur = $this->get('doctrine_mongodb')
+          ->getRepository('HeksBlogBundle:Utilisateur')
+          ->findOneByNom($this->get('session')->get('utilisateur')->getNom());
+            $utilisateur->addArticle($document);
             $dm = $this->getDocumentManager();
-            $dm->persist($document);
+            $dm->persist($utilisateur);
             $dm->flush();
 
-            return $this->redirect($this->generateUrl('utilisateur_show', array('id' => $document->getId())));
+            return $this->redirect($this->generateUrl('article_show', array('id' => $document->getId())));
         }
 
         return array(
@@ -128,9 +93,9 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * Finds and displays a Utilisateur document.
+     * Finds and displays a Article document.
      *
-     * @Route("/{id}/show", name="utilisateur_show")
+     * @Route("/{id}/show", name="article_show")
      * @Template()
      *
      * @param string $id The document ID
@@ -143,10 +108,10 @@ class UtilisateurController extends Controller
     {
         $dm = $this->getDocumentManager();
 
-        $document = $dm->getRepository('HeksBlogBundle:Utilisateur')->find($id);
+        $document = $dm->getRepository('HeksBlogBundle:Article')->find($id);
 
         if (!$document) {
-            throw $this->createNotFoundException('Unable to find Utilisateur document.');
+            throw $this->createNotFoundException('Unable to find Article document.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -158,9 +123,9 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Utilisateur document.
+     * Displays a form to edit an existing Article document.
      *
-     * @Route("/{id}/edit", name="utilisateur_edit")
+     * @Route("/{id}/edit", name="article_edit")
      * @Template()
      *
      * @param string $id The document ID
@@ -173,13 +138,13 @@ class UtilisateurController extends Controller
     {
         $dm = $this->getDocumentManager();
 
-        $document = $dm->getRepository('HeksBlogBundle:Utilisateur')->find($id);
+        $document = $dm->getRepository('HeksBlogBundle:Article')->find($id);
 
         if (!$document) {
-            throw $this->createNotFoundException('Unable to find Utilisateur document.');
+            throw $this->createNotFoundException('Unable to find Article document.');
         }
 
-        $editForm = $this->createForm(UtilisateurType::class, $document);
+        $editForm = $this->createForm(ArticleType::class, $document);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -190,11 +155,11 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * Edits an existing Utilisateur document.
+     * Edits an existing Article document.
      *
-     * @Route("/{id}/update", name="utilisateur_update")
+     * @Route("/{id}/update", name="article_update")
      * @Method("POST")
-     * @Template("HeksBlogBundle:Utilisateur:edit.html.twig")
+     * @Template("HeksBlogBundle:Article:edit.html.twig")
      *
      * @param Request $request The request object
      * @param string $id       The document ID
@@ -207,21 +172,21 @@ class UtilisateurController extends Controller
     {
         $dm = $this->getDocumentManager();
 
-        $document = $dm->getRepository('HeksBlogBundle:Utilisateur')->find($id);
+        $document = $dm->getRepository('HeksBlogBundle:Article')->find($id);
 
         if (!$document) {
-            throw $this->createNotFoundException('Unable to find Utilisateur document.');
+            throw $this->createNotFoundException('Unable to find Article document.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm   = $this->createForm(UtilisateurType::class, $document);
+        $editForm   = $this->createForm(ArticleType::class, $document);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $dm->persist($document);
             $dm->flush();
 
-            return $this->redirect($this->generateUrl('utilisateur_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('article_edit', array('id' => $id)));
         }
 
         return array(
@@ -232,9 +197,9 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * Deletes a Utilisateur document.
+     * Deletes a Article document.
      *
-     * @Route("/{id}/delete", name="utilisateur_delete")
+     * @Route("/{id}/delete", name="article_delete")
      * @Method("POST")
      *
      * @param Request $request The request object
@@ -251,23 +216,23 @@ class UtilisateurController extends Controller
 
         if ($form->isValid()) {
             $dm = $this->getDocumentManager();
-            $document = $dm->getRepository('HeksBlogBundle:Utilisateur')->find($id);
+            $document = $dm->getRepository('HeksBlogBundle:Article')->find($id);
 
             if (!$document) {
-                throw $this->createNotFoundException('Unable to find Utilisateur document.');
+                throw $this->createNotFoundException('Unable to find Article document.');
             }
 
             $dm->remove($document);
             $dm->flush();
         }
 
-        return $this->redirect($this->generateUrl('utilisateur'));
+        return $this->redirect($this->generateUrl('article'));
     }
 
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
-            ->add('id', HiddenType::class)
+            ->add('id', 'hidden')
             ->getForm()
         ;
     }
@@ -281,6 +246,4 @@ class UtilisateurController extends Controller
     {
         return $this->get('doctrine.odm.mongodb.document_manager');
     }
-
-
 }
