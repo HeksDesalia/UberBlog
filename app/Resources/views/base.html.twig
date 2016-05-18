@@ -15,12 +15,13 @@
           <p>Le blog colaboratif </p>
           {% if utilisateur is defined %}
             <p>Connecté en tant que : {{utilisateur.nom}}</p>
+            <a href="{{ path('article_new') }}">Ecrire un article</a>
           {% else %}
             <a href="{{ path('utilisateur_connect') }}">Se connecter</a>
           {% endif %}
         </header>
         <footer>
-          <a href="{{ path('utilisateur') }}" class="button style2 scrolly-middle">Accueil</a>
+          <a href="{{ path('article') }}" class="button style2 scrolly-middle">Accueil</a>
         </footer>
       </section>
 

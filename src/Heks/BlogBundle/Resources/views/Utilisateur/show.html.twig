@@ -16,7 +16,10 @@
         Nom : {{document.nom}}
       </li>
       <li>
-        Articles rédigés : PASENCOREFAIT
+        Articles rédigés :
+        {% for article in document.articles %}
+          <p>{{article.titre }}</p>
+        {% endfor %}
       </li>
     </ul>
     <footer>

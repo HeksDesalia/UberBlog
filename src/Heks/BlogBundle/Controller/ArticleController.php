@@ -27,15 +27,19 @@ class ArticleController extends Controller
      */
     public function indexAction()
     {
+
+
         $dm = $this->getDocumentManager();
+        $utilisateur = $this->get('session')->get('utilisateur');
 
         $documents = $dm->getRepository('HeksBlogBundle:Utilisateur')->findAll();
-        //var_dump($documents);
+
         foreach ($documents as $document) {
           $articles[] = $document->getArticles()->toArray();
         }
 
-        return array('documents' => $articles);
+        return array('documents' => $articles,
+                     'utilisateur' => $utilisateur);
     }
 
     /**
@@ -78,6 +82,8 @@ class ArticleController extends Controller
           $utilisateur = $this->get('doctrine_mongodb')
           ->getRepository('HeksBlogBundle:Utilisateur')
           ->findOneByNom($this->get('session')->get('utilisateur')->getNom());
+            $document->setDate(new \DateTime());
+            $document->setContenu(nl2br($document->getContenu()));
             $utilisateur->addArticle($document);
             $dm = $this->getDocumentManager();
             $dm->persist($utilisateur);
@@ -108,18 +114,20 @@ class ArticleController extends Controller
     {
         $dm = $this->getDocumentManager();
 
-        $document = $dm->getRepository('HeksBlogBundle:Article')->find($id);
+        $documents = $dm->getRepository('HeksBlogBundle:Utilisateur')->findAll();
+        foreach($documents as $document){
+          foreach ($document->getArticles() as $article){
+            if ($article->getId() == $id){
+              return array(
+                  'document' => $article,
+              );
+            }
+          }
+        }
 
         if (!$document) {
             throw $this->createNotFoundException('Unable to find Article document.');
         }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'document' => $document,
-            'delete_form' => $deleteForm->createView(),
-        );
     }
 
     /**

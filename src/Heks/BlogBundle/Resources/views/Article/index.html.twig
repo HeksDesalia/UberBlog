@@ -15,11 +15,13 @@
         <a href="#" class="image fit"><img src="{{asset('images/pic01.jpg')}}" alt="" /></a>
         <div class="inner">
           <header>
-            <h2>{{ document.titre }}</h2>
+            <h2><a href="{{ path('article_show', { 'id': document.id }) }}">{{ document.titre }}</a></h2>
             <p> Publié le {{ document.date|date("d/m/Y") }} </p>
           </header>
           <p>
+          {% autoescape false %}
             {{ document.contenu }}
+          {% endautoescape %}  
           </p>
         </div>
       </article>
