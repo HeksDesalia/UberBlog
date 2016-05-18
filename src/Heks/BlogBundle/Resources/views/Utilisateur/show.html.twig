@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}ÜberBlog - Infos sur {{document.nom }}{% endblock %}
+
+{% block body %}
+
+<!-- Banner -->
+  <section id="banner">
+    <header>
+      <h2>Informations sur l'utilisateur - {{document.nom}}</h2>
+    </header>
+    <ul>
+      <li>
+        Id : {{document.id}}
+      </li>
+      <li>
+        Nom : {{document.nom}}
+      </li>
+      <li>
+        Articles rédigés : PASENCOREFAIT
+      </li>
+    </ul>
+    <footer>
+      <p><a href="{{ path('utilisateur') }}">
+          Retourner à la liste des utilisateurs
+      </a></p>
+
+      <p><a href="{{ path('utilisateur_edit', { 'id': document.id }) }}">
+          Modifier l'utilisateur
+      </a></p>
+
+      <form action="{{ path('utilisateur_delete', { 'id': document.id }) }}" method="post">
+          {{ form_widget(delete_form) }}
+          <button type="submit">SUPPRIMER L'UTILISATEUR</button>
+      </form>
+    </footer>
+  </section>
+
+{% endblock %}

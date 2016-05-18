@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}ÜberBlog - Connexion{% endblock %}
+
+{% block body %}
+<section id="header">
+  <header>
+    <h1>ÜberBlog - Connexion</h1>
+    <form action="{{ path('utilisateur_connect') }}" method="post">
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit" class="button style2 scrolly">Connexion !</button>
+        </p>
+    </form>
+  </header>
+</section>
+{% endblock %}

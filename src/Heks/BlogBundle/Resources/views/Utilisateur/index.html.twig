@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}ÜberBlog - Utilisateurs{% endblock %}
+
+{% block body %}
+
+<!-- Banner -->
+  <section id="banner">
+    <header>
+      <h2>ÜberBlog - Liste des utilisateurs</h2>
+    </header>
+    <p>Accédez ici à la gestion des utilisateurs !</p>
+    <a href="#first" class="button style2 scrolly-middle">Liste des utilisateurs</a>
+  </section>
+
+<article id="first" class="container box style1 right">
+  <a href="#" class="image fit"><img src="{{asset('images/mr.jpg')}}" alt="" /></a>
+  <div class="inner">
+    <header>
+      <h2><a href="{{ path('utilisateur_create') }}">
+          Ajouter un nouvel utilisateur
+      </a></h2>
+    </header>
+  </div>
+</article>
+{% for document in documents %}
+<article id="first" class="container box style1 right">
+  <a href="#" class="image fit"><img src="{{asset('images/pic01.jpg')}}" alt="" /></a>
+  <div class="inner">
+    <header>
+      <h2><a href="{{ path('utilisateur_show', { 'id': document.id }) }}">{{ document.nom }}</a></h2>
+    </header>
+    <ul>
+        <li>
+            <a href="{{ path('utilisateur_show', { 'id': document.id }) }}">Voir</a>
+        </li>
+        <li>
+            <a href="{{ path('utilisateur_edit', { 'id': document.id }) }}">Modifier</a>
+        </li>
+    </ul>
+  </div>
+</article>
+{% endfor %}
+
+
+
+{% endblock %}

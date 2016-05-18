@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}ÜberBlog{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+    </head>
+    <body>
+      <section id="header">
+        <header>
+          <h1>ÜberBlog</h1>
+          <p>Le blog colaboratif </p>
+        </header>
+        <footer>
+          <a href="{{ path('utilisateur') }}" class="button style2 scrolly-middle">Accueil</a>
+        </footer>
+      </section>
+
+
+        {% block body %}{% endblock %}
+        <section id="footer">
+    			<ul class="icons">
+    				<li><a href="#" class="icon fa-refresh"></a></li>
+    			</ul>
+    			<div class="copyright">
+    				<ul class="menu">
+    					<li>ÜberBlog&copy; VAMP, tous droits réservés</li>
+    					<li>Design : <a href="http://html5up.net">HTML5 UP</a></li>
+    				</ul>
+    			</div>
+    		</section>
+
+        {% block javascripts %}{% endblock %}
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.poptrox.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.scrolly.min.js') }}"></script>
+        <script src="{{ asset('js/main.js') }}"></script>
+        <script src="{{ asset('js/skel.min.js') }}"></script>
+        <script src="{{ asset('js/util.js') }}"></script>
+    </body>
+</html>

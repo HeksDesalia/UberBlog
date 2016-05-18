@@ -1,0 +1,17 @@
+heks_blog:
+    resource: "@HeksBlogBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+acme_store:
+    resource: "@AcmeStoreBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+product_create:
+    path:      /product/create
+    defaults:  { _controller: AcmeStoreBundle:Default:create }

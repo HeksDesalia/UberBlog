@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}ÜberBlog - Nouvel utilisateur{% endblock %}
+{% block body %}
+<section id="header">
+  <header>
+    <h1>ÜberBlog - Création d'un utilisateur</h1>
+    <form action="{{ path('utilisateur_create') }}" method="post">
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit" class="button style2 scrolly">Create</button>
+        </p>
+    </form>
+  </header>
+</section>
+
+{% endblock %}
